@@ -16,6 +16,8 @@ limitations under the License.
 
 package it.aretesoftware.jvdf;
 
+import com.badlogic.gdx.utils.JsonValue;
+
 import java.util.Stack;
 
 /**
@@ -27,7 +29,7 @@ public class VDFParserState {
     /**
      * The root node is the base of the VDF document.  All subnodes are children of the root node.
      */
-    private final VDFNode rootNode;
+    private VDFNode rootNode;
 
     /**
      * Since a VDF document can have a virtually unlimited amount of subnodes, we use a stack datastructure to represent
@@ -149,8 +151,9 @@ public class VDFParserState {
                 keyName = currentString.toString();
                 //System.out.println(keyName);
             } else {
-                // Store the value into the current node
-                currentValue(keyName, currentString.toString());
+                // add a child
+                VDFNode node = new VDFNode(currentString.toString());
+                current().addChild(keyName, node);
             }
 
             resetString();
@@ -199,7 +202,7 @@ public class VDFParserState {
             VDFNode node = new VDFNode(VDFNode.ValueType.object);
 
             // Set the current node's value
-            currentValue(keyName, node);
+            current().addChild(keyName, node);
 
             // Push node onto child node stack
             childStack.push(node);
@@ -237,16 +240,11 @@ public class VDFParserState {
             throw new VDFParseException("The root node was not at the top of the stack at the end of parsing. " +
                     "There was a subnode mismatch (misplaced '{'?)");
         }
+
+        rootNode.child.parent = null;
+        rootNode = rootNode.child();
     }
 
-    /**
-     * Pushes a key/value pair to the current node.
-     * @param key the key
-     * @param val the value
-     */
-    private void currentValue(String key, Object val) {
-        //current().put(key, val);  //FIXME uncomment
-    }
 
     /**
      * Clears the string buffer.

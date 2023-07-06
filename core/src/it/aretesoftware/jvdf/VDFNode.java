@@ -16,9 +16,13 @@ limitations under the License.
 
 package it.aretesoftware.jvdf;
 
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Null;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -47,26 +51,6 @@ public class VDFNode {
 
     /** @param value May be null. */
     public VDFNode (@Null String value) {
-        set(value);
-    }
-
-    public VDFNode (double value) {
-        set(value, null);
-    }
-
-    public VDFNode (long value) {
-        set(value, null);
-    }
-
-    public VDFNode (double value, String stringValue) {
-        set(value, stringValue);
-    }
-
-    public VDFNode (long value, String stringValue) {
-        set(value, stringValue);
-    }
-
-    public VDFNode (boolean value) {
         set(value);
     }
 
@@ -334,6 +318,18 @@ public class VDFNode {
                 return longValue != 0 ? (char)1 : 0;
         }
         throw new IllegalStateException("Value cannot be converted to char: " + type);
+    }
+
+    @SuppressWarnings("All")
+    public VDFNode[] asArray(String key) {
+        List<VDFNode> list = new ArrayList<>();
+        int i = 0;
+        for (VDFNode value = child; value != null; value = value.next, i++) {
+            if (key.equals(value.name)) {
+                list.add(value);
+            }
+        }
+        return list.toArray(new VDFNode[list.size()]);
     }
 
     /** Returns the children of this value as a newly allocated String array.
@@ -946,28 +942,67 @@ public class VDFNode {
     /** @param value May be null. */
     public void set (@Null String value) {
         stringValue = value;
-        type = value == null ? VDFNode.ValueType.nullValue : VDFNode.ValueType.stringValue;
-    }
+        if (value == null) {
+            type = VDFNode.ValueType.nullValue;
+            return;
+        }
+        else {
+            type = ValueType.stringValue;
+        }
 
-    /** @param stringValue May be null if the string representation is the string value of the double (eg, no leading zeros). */
-    public void set (double value, @Null String stringValue) {
-        doubleValue = value;
-        longValue = (long)value;
-        this.stringValue = stringValue;
-        type = VDFNode.ValueType.doubleValue;
-    }
+        if (value.equals("true") || value.equals("false")) {
+            type = ValueType.booleanValue;
+            boolean bool = Boolean.parseBoolean(value);
+            longValue = bool ? 1 : 0;
+            doubleValue = bool ? 1 : 0;
+            return;
+        }
 
-    /** @param stringValue May be null if the string representation is the string value of the long (eg, no leading zeros). */
-    public void set (long value, @Null String stringValue) {
-        longValue = value;
-        doubleValue = value;
-        this.stringValue = stringValue;
-        type = VDFNode.ValueType.longValue;
-    }
+        boolean charactersDetected = false, couldBeDouble = false;
+        char[] characters = value.toCharArray();
+        for (int charIndex = 0; charIndex < characters.length; charIndex++) {
+            switch (characters[charIndex]) {
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                case '-':
+                case '+':
+                    break;
+                case '.':
+                case 'e':
+                case 'E':
+                    couldBeDouble = true;
+                    break;
+                default:
+                    charactersDetected = true;
+                    couldBeDouble = false;
+                    break;
+            }
+        }
+        if (charactersDetected) {
+            return;
+        }
 
-    public void set (boolean value) {
-        longValue = value ? 1 : 0;
-        type = VDFNode.ValueType.booleanValue;
+        try {
+            if (couldBeDouble) {
+                doubleValue = Double.parseDouble(value);
+                longValue = (long)doubleValue;
+                type = ValueType.doubleValue;
+                return;
+            }
+        }
+        catch (Exception ignored) {}
+
+        longValue = Long.parseLong(value);
+        doubleValue = longValue;
+        type = ValueType.longValue;
     }
 
     public VDFNode.VDFIterator iterator () {
