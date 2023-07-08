@@ -14,9 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package it.aretesoftware.jvdf;
-
-import com.badlogic.gdx.utils.Null;
+package it.aretesoftware.jsonvdf;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -46,7 +44,7 @@ public class VDFNode {
     }
 
     /** @param value May be null. */
-    public VDFNode (@Null String value) {
+    public VDFNode (String value) {
         set(value);
     }
 
@@ -54,7 +52,7 @@ public class VDFNode {
     /** Returns the child at the specified index. This requires walking the linked list to the specified entry, see
      * {@link VDFNode} for how to iterate efficiently.
      * @return May be null. */
-    public @Null VDFNode get (int index) {
+    public VDFNode get (int index) {
         VDFNode current = child;
         while (current != null && index > 0) {
             index--;
@@ -65,7 +63,7 @@ public class VDFNode {
 
     /** Returns the child with the specified name.
      * @return May be null. */
-    public @Null VDFNode get (String name) {
+    public VDFNode get (String name) {
         VDFNode current = child;
         while (current != null && (current.name == null || !current.name.equalsIgnoreCase(name)))
             current = current.next;
@@ -108,7 +106,7 @@ public class VDFNode {
     /** Removes the child with the specified index. This requires walking the linked list to the specified entry, see
      * {@link VDFNode} for how to iterate efficiently.
      * @return May be null. */
-    public @Null VDFNode remove (int index) {
+    public VDFNode remove (int index) {
         VDFNode child = get(index);
         if (child == null) return null;
         if (child.prev == null) {
@@ -124,7 +122,7 @@ public class VDFNode {
 
     /** Removes the child with the specified name.
      * @return May be null. */
-    public @Null VDFNode remove (String name) {
+    public VDFNode remove (String name) {
         VDFNode child = get(name);
         if (child == null) return null;
         if (child.prev == null) {
@@ -172,7 +170,7 @@ public class VDFNode {
     /** Returns this value as a string.
      * @return May be null if this value is null.
      * @throws IllegalStateException if this an array or object. */
-    public @Null String asString () {
+    public String asString () {
         return stringValue;
     }
 
@@ -442,14 +440,14 @@ public class VDFNode {
 
     /** Finds the child with the specified name and returns its first child.
      * @return May be null. */
-    public @Null VDFNode getChild (String name) {
+    public VDFNode getChild (String name) {
         VDFNode child = get(name);
         return child == null ? null : child.child;
     }
 
     /** Finds the child with the specified name and returns it as a string. Returns defaultValue if not found.
      * @param defaultValue May be null. */
-    public String getString (String name, @Null String defaultValue) {
+    public String getString (String name, String defaultValue) {
         VDFNode child = get(name);
         return (child == null || !child.isValue() || child.isNull()) ? defaultValue : child.asString();
     }
@@ -703,24 +701,24 @@ public class VDFNode {
 
     /** Returns the name for this object value.
      * @return May be null. */
-    public @Null String name () {
+    public String name () {
         return name;
     }
 
     /** @param name May be null. */
-    public void setName (@Null String name) {
+    public void setName (String name) {
         this.name = name;
     }
 
     /** Returns the parent for this value.
      * @return May be null. */
-    public @Null VDFNode parent () {
+    public VDFNode parent () {
         return parent;
     }
 
     /** Returns the first child for this object or array.
      * @return May be null. */
-    public @Null VDFNode child () {
+    public VDFNode child () {
         return child;
     }
 
@@ -755,31 +753,31 @@ public class VDFNode {
 
     /** Returns the next sibling of this value.
      * @return May be null. */
-    public @Null VDFNode next () {
+    public VDFNode next () {
         return next;
     }
 
     /** Sets the next sibling of this value. Does not change the parent {@link #size()}.
      * @param next May be null. */
-    public void setNext (@Null VDFNode next) {
+    public void setNext (VDFNode next) {
         this.next = next;
     }
 
     /** Returns the previous sibling of this value.
      * @return May be null. */
-    public @Null VDFNode prev () {
+    public VDFNode prev () {
         return prev;
     }
 
 
     /** Sets the next sibling of this value. Does not change the parent {@link #size()}.
      * @param prev May be null. */
-    public void setPrev (@Null VDFNode prev) {
+    public void setPrev (VDFNode prev) {
         this.prev = prev;
     }
 
     /** @param value May be null. */
-    public void set (@Null String value) {
+    public void set (String value) {
         stringValue = value;
         if (value == null) {
             type = VDFNode.ValueType.nullValue;
@@ -816,7 +814,7 @@ public class VDFNode {
 
     public class VDFIterator implements Iterator<VDFNode>, Iterable<VDFNode> {
         VDFNode entry = child;
-        VDFNode  current;
+        VDFNode current;
 
         @Override
         public boolean hasNext () {
@@ -843,6 +841,7 @@ public class VDFNode {
             size--;
         }
 
+        @Override
         public Iterator<VDFNode> iterator () {
             return this;
         }

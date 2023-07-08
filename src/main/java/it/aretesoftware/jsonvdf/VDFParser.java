@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package it.aretesoftware.jvdf;
+package it.aretesoftware.jsonvdf;
 
 /**
  * Parses VDF documents into iterable tree structures.
