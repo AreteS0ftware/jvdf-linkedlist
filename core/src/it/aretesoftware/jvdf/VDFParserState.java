@@ -16,8 +16,6 @@ limitations under the License.
 
 package it.aretesoftware.jvdf;
 
-import com.badlogic.gdx.utils.JsonValue;
-
 import java.util.Stack;
 
 /**

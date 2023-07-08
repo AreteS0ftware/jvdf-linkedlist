@@ -16,8 +16,6 @@ limitations under the License.
 
 package it.aretesoftware.jvdf;
 
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Null;
 
 import java.util.ArrayList;
@@ -35,8 +33,6 @@ public class VDFNode {
 
     /** May be null. */
     private String stringValue;
-    private double doubleValue;
-    private long longValue;
 
     public String name;
     /** May be null. */
@@ -177,150 +173,140 @@ public class VDFNode {
      * @return May be null if this value is null.
      * @throws IllegalStateException if this an array or object. */
     public @Null String asString () {
-        switch (type) {
-            case stringValue:
-                return stringValue;
-            case doubleValue:
-                return stringValue != null ? stringValue : Double.toString(doubleValue);
-            case longValue:
-                return stringValue != null ? stringValue : Long.toString(longValue);
-            case booleanValue:
-                return longValue != 0 ? "true" : "false";
-            case nullValue:
-                return null;
-        }
-        throw new IllegalStateException("Value cannot be converted to string: " + type);
+        return stringValue;
+    }
+
+    public String asString (String defaultValue) {
+        return stringValue != null ? stringValue : defaultValue;
     }
 
     /** Returns this value as a float.
      * @throws IllegalStateException if this an array or object. */
     public float asFloat () {
-        switch (type) {
-            case stringValue:
-                return Float.parseFloat(stringValue);
-            case doubleValue:
-                return (float)doubleValue;
-            case longValue:
-                return longValue;
-            case booleanValue:
-                return longValue != 0 ? 1 : 0;
+        return Float.parseFloat(stringValue);
+    }
+
+    public float asFloat(float defaultValue) {
+        try {
+            return asFloat();
         }
-        throw new IllegalStateException("Value cannot be converted to float: " + type);
+        catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
     /** Returns this value as a double.
      * @throws IllegalStateException if this an array or object. */
     public double asDouble () {
-        switch (type) {
-            case stringValue:
-                return Double.parseDouble(stringValue);
-            case doubleValue:
-                return doubleValue;
-            case longValue:
-                return longValue;
-            case booleanValue:
-                return longValue != 0 ? 1 : 0;
+        return Double.parseDouble(stringValue);
+    }
+
+    public double asDouble(double defaultValue) {
+        try {
+            return asDouble();
         }
-        throw new IllegalStateException("Value cannot be converted to double: " + type);
+        catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
     /** Returns this value as a long.
      * @throws IllegalStateException if this an array or object. */
     public long asLong () {
-        switch (type) {
-            case stringValue:
-                return Long.parseLong(stringValue);
-            case doubleValue:
-                return (long)doubleValue;
-            case longValue:
-                return longValue;
-            case booleanValue:
-                return longValue != 0 ? 1 : 0;
+        return Long.parseLong(stringValue);
+    }
+
+    public long asLong(long defaultValue) {
+        try {
+            return asLong();
         }
-        throw new IllegalStateException("Value cannot be converted to long: " + type);
+        catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
     /** Returns this value as an int.
      * @throws IllegalStateException if this an array or object. */
     public int asInt () {
-        switch (type) {
-            case stringValue:
-                return Integer.parseInt(stringValue);
-            case doubleValue:
-                return (int)doubleValue;
-            case longValue:
-                return (int)longValue;
-            case booleanValue:
-                return longValue != 0 ? 1 : 0;
+        return Integer.parseInt(stringValue);
+    }
+
+    public long asInt(int defaultValue) {
+        try {
+            return asInt();
         }
-        throw new IllegalStateException("Value cannot be converted to int: " + type);
+        catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
     /** Returns this value as a boolean.
      * @throws IllegalStateException if this an array or object. */
     public boolean asBoolean () {
-        switch (type) {
-            case stringValue:
-                return stringValue.equalsIgnoreCase("true");
-            case doubleValue:
-                return doubleValue != 0;
-            case longValue:
-                return longValue != 0;
-            case booleanValue:
-                return longValue != 0;
+        return Boolean.parseBoolean(stringValue);
+    }
+
+    public boolean asBoolean(boolean defaultValue) {
+        try {
+            return asBoolean();
         }
-        throw new IllegalStateException("Value cannot be converted to boolean: " + type);
+        catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
     /** Returns this value as a byte.
      * @throws IllegalStateException if this an array or object. */
     public byte asByte () {
-        switch (type) {
-            case stringValue:
-                return Byte.parseByte(stringValue);
-            case doubleValue:
-                return (byte)doubleValue;
-            case longValue:
-                return (byte)longValue;
-            case booleanValue:
-                return longValue != 0 ? (byte)1 : 0;
+        return Byte.parseByte(stringValue);
+    }
+
+    public byte asByte(byte defaultValue) {
+        try {
+            return asByte();
         }
-        throw new IllegalStateException("Value cannot be converted to byte: " + type);
+        catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
     /** Returns this value as a short.
      * @throws IllegalStateException if this an array or object. */
     public short asShort () {
-        switch (type) {
-            case stringValue:
-                return Short.parseShort(stringValue);
-            case doubleValue:
-                return (short)doubleValue;
-            case longValue:
-                return (short)longValue;
-            case booleanValue:
-                return longValue != 0 ? (short)1 : 0;
+        return Short.parseShort(stringValue);
+    }
+
+    public short asShort(short defaultValue) {
+        try {
+            return asShort();
         }
-        throw new IllegalStateException("Value cannot be converted to short: " + type);
+        catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
     /** Returns this value as a char.
      * @throws IllegalStateException if this an array or object. */
     public char asChar () {
-        switch (type) {
-            case stringValue:
-                return stringValue.length() == 0 ? 0 : stringValue.charAt(0);
-            case doubleValue:
-                return (char)doubleValue;
-            case longValue:
-                return (char)longValue;
-            case booleanValue:
-                return longValue != 0 ? (char)1 : 0;
+        try {
+            long value = asLong();
+            return (char) value;
         }
-        throw new IllegalStateException("Value cannot be converted to char: " + type);
+        catch (NumberFormatException e) {
+            if (stringValue.length() > 1) throw new IllegalStateException("String has more than one character.");
+            return stringValue.charAt(0);
+        }
     }
 
-    @SuppressWarnings("All")
+    public char asShort(char defaultValue) {
+        try {
+            return asChar();
+        }
+        catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
     public VDFNode[] asArray(String key) {
         List<VDFNode> list = new ArrayList<>();
         int i = 0;
@@ -334,266 +320,119 @@ public class VDFNode {
 
     /** Returns the children of this value as a newly allocated String array.
      * @throws IllegalStateException if this is not an array. */
-    public String[] asStringArray () {
-        if (type != VDFNode.ValueType.array) throw new IllegalStateException("Value is not an array: " + type);
-        String[] array = new String[size];
+    public String[] asStringArray (String key) {
+        List<String> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
-            String v;
-            switch (value.type) {
-                case stringValue:
-                    v = value.stringValue;
-                    break;
-                case doubleValue:
-                    v = stringValue != null ? stringValue : Double.toString(value.doubleValue);
-                    break;
-                case longValue:
-                    v = stringValue != null ? stringValue : Long.toString(value.longValue);
-                    break;
-                case booleanValue:
-                    v = value.longValue != 0 ? "true" : "false";
-                    break;
-                case nullValue:
-                    v = null;
-                    break;
-                default:
-                    throw new IllegalStateException("Value cannot be converted to string: " + value.type);
+            if (key.equals(value.name)) {
+                list.add(value.stringValue);
             }
-            array[i] = v;
         }
-        return array;
+        return list.toArray(new String[list.size()]);
     }
 
     /** Returns the children of this value as a newly allocated float array.
      * @throws IllegalStateException if this is not an array. */
-    public float[] asFloatArray () {
-        if (type != VDFNode.ValueType.array) throw new IllegalStateException("Value is not an array: " + type);
-        float[] array = new float[size];
+    public Float[] asFloatArray (String key) {
+        List<Float> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
-            float v;
-            switch (value.type) {
-                case stringValue:
-                    v = Float.parseFloat(value.stringValue);
-                    break;
-                case doubleValue:
-                    v = (float)value.doubleValue;
-                    break;
-                case longValue:
-                    v = value.longValue;
-                    break;
-                case booleanValue:
-                    v = value.longValue != 0 ? 1 : 0;
-                    break;
-                default:
-                    throw new IllegalStateException("Value cannot be converted to float: " + value.type);
+            if (key.equals(value.name)) {
+                list.add(value.asFloat());
             }
-            array[i] = v;
         }
-        return array;
+        return list.toArray(new Float[list.size()]);
     }
 
     /** Returns the children of this value as a newly allocated double array.
      * @throws IllegalStateException if this is not an array. */
-    public double[] asDoubleArray () {
-        if (type != VDFNode.ValueType.array) throw new IllegalStateException("Value is not an array: " + type);
-        double[] array = new double[size];
+    public Double[] asDoubleArray (String key) {
+        List<Double> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
-            double v;
-            switch (value.type) {
-                case stringValue:
-                    v = Double.parseDouble(value.stringValue);
-                    break;
-                case doubleValue:
-                    v = value.doubleValue;
-                    break;
-                case longValue:
-                    v = value.longValue;
-                    break;
-                case booleanValue:
-                    v = value.longValue != 0 ? 1 : 0;
-                    break;
-                default:
-                    throw new IllegalStateException("Value cannot be converted to double: " + value.type);
+            if (key.equals(value.name)) {
+                list.add(value.asDouble());
             }
-            array[i] = v;
         }
-        return array;
+        return list.toArray(new Double[list.size()]);
     }
 
     /** Returns the children of this value as a newly allocated long array.
      * @throws IllegalStateException if this is not an array. */
-    public long[] asLongArray () {
-        if (type != VDFNode.ValueType.array) throw new IllegalStateException("Value is not an array: " + type);
-        long[] array = new long[size];
+    public Long[] asLongArray (String key) {
+        List<Long> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
-            long v;
-            switch (value.type) {
-                case stringValue:
-                    v = Long.parseLong(value.stringValue);
-                    break;
-                case doubleValue:
-                    v = (long)value.doubleValue;
-                    break;
-                case longValue:
-                    v = value.longValue;
-                    break;
-                case booleanValue:
-                    v = value.longValue != 0 ? 1 : 0;
-                    break;
-                default:
-                    throw new IllegalStateException("Value cannot be converted to long: " + value.type);
+            if (key.equals(value.name)) {
+                list.add(value.asLong());
             }
-            array[i] = v;
         }
-        return array;
+        return list.toArray(new Long[list.size()]);
     }
 
     /** Returns the children of this value as a newly allocated int array.
      * @throws IllegalStateException if this is not an array. */
-    public int[] asIntArray () {
-        if (type != VDFNode.ValueType.array) throw new IllegalStateException("Value is not an array: " + type);
-        int[] array = new int[size];
+    public Integer[] asIntArray (String key) {
+        List<Integer> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
-            int v;
-            switch (value.type) {
-                case stringValue:
-                    v = Integer.parseInt(value.stringValue);
-                    break;
-                case doubleValue:
-                    v = (int)value.doubleValue;
-                    break;
-                case longValue:
-                    v = (int)value.longValue;
-                    break;
-                case booleanValue:
-                    v = value.longValue != 0 ? 1 : 0;
-                    break;
-                default:
-                    throw new IllegalStateException("Value cannot be converted to int: " + value.type);
+            if (key.equals(value.name)) {
+                list.add(value.asInt());
             }
-            array[i] = v;
         }
-        return array;
+        return list.toArray(new Integer[list.size()]);
     }
 
     /** Returns the children of this value as a newly allocated boolean array.
      * @throws IllegalStateException if this is not an array. */
-    public boolean[] asBooleanArray () {
-        if (type != VDFNode.ValueType.array) throw new IllegalStateException("Value is not an array: " + type);
-        boolean[] array = new boolean[size];
+    public Boolean[] asBooleanArray (String key) {
+        List<Boolean> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
-            boolean v;
-            switch (value.type) {
-                case stringValue:
-                    v = Boolean.parseBoolean(value.stringValue);
-                    break;
-                case doubleValue:
-                    v = value.doubleValue == 0;
-                    break;
-                case longValue:
-                    v = value.longValue == 0;
-                    break;
-                case booleanValue:
-                    v = value.longValue != 0;
-                    break;
-                default:
-                    throw new IllegalStateException("Value cannot be converted to boolean: " + value.type);
+            if (key.equals(value.name)) {
+                list.add(value.asBoolean());
             }
-            array[i] = v;
         }
-        return array;
+        return list.toArray(new Boolean[list.size()]);
     }
 
     /** Returns the children of this value as a newly allocated byte array.
      * @throws IllegalStateException if this is not an array. */
-    public byte[] asByteArray () {
-        if (type != VDFNode.ValueType.array) throw new IllegalStateException("Value is not an array: " + type);
-        byte[] array = new byte[size];
+    public Byte[] asByteArray (String key) {
+        List<Byte> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
-            byte v;
-            switch (value.type) {
-                case stringValue:
-                    v = Byte.parseByte(value.stringValue);
-                    break;
-                case doubleValue:
-                    v = (byte)value.doubleValue;
-                    break;
-                case longValue:
-                    v = (byte)value.longValue;
-                    break;
-                case booleanValue:
-                    v = value.longValue != 0 ? (byte)1 : 0;
-                    break;
-                default:
-                    throw new IllegalStateException("Value cannot be converted to byte: " + value.type);
+            if (key.equals(value.name)) {
+                list.add(value.asByte());
             }
-            array[i] = v;
         }
-        return array;
+        return list.toArray(new Byte[list.size()]);
     }
 
     /** Returns the children of this value as a newly allocated short array.
      * @throws IllegalStateException if this is not an array. */
-    public short[] asShortArray () {
-        if (type != VDFNode.ValueType.array) throw new IllegalStateException("Value is not an array: " + type);
-        short[] array = new short[size];
+    public Short[] asShortArray (String key) {
+        List<Short> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
-            short v;
-            switch (value.type) {
-                case stringValue:
-                    v = Short.parseShort(value.stringValue);
-                    break;
-                case doubleValue:
-                    v = (short)value.doubleValue;
-                    break;
-                case longValue:
-                    v = (short)value.longValue;
-                    break;
-                case booleanValue:
-                    v = value.longValue != 0 ? (short)1 : 0;
-                    break;
-                default:
-                    throw new IllegalStateException("Value cannot be converted to short: " + value.type);
+            if (key.equals(value.name)) {
+                list.add(value.asShort());
             }
-            array[i] = v;
         }
-        return array;
+        return list.toArray(new Short[list.size()]);
     }
 
     /** Returns the children of this value as a newly allocated char array.
      * @throws IllegalStateException if this is not an array. */
-    public char[] asCharArray () {
-        if (type != VDFNode.ValueType.array) throw new IllegalStateException("Value is not an array: " + type);
-        char[] array = new char[size];
+    public Character[] asCharArray (String key) {
+        List<Character> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
-            char v;
-            switch (value.type) {
-                case stringValue:
-                    v = value.stringValue.length() == 0 ? 0 : value.stringValue.charAt(0);
-                    break;
-                case doubleValue:
-                    v = (char)value.doubleValue;
-                    break;
-                case longValue:
-                    v = (char)value.longValue;
-                    break;
-                case booleanValue:
-                    v = value.longValue != 0 ? (char)1 : 0;
-                    break;
-                default:
-                    throw new IllegalStateException("Value cannot be converted to char: " + value.type);
+            if (key.equals(value.name)) {
+                list.add(value.asChar());
             }
-            array[i] = v;
         }
-        return array;
+        return list.toArray(new Character[list.size()]);
     }
 
     /** Returns true if a child with the specified name exists and has a child. */
@@ -952,57 +791,22 @@ public class VDFNode {
 
         if (value.equals("true") || value.equals("false")) {
             type = ValueType.booleanValue;
-            boolean bool = Boolean.parseBoolean(value);
-            longValue = bool ? 1 : 0;
-            doubleValue = bool ? 1 : 0;
             return;
         }
 
-        boolean charactersDetected = false, couldBeDouble = false;
-        char[] characters = value.toCharArray();
-        for (int charIndex = 0; charIndex < characters.length; charIndex++) {
-            switch (characters[charIndex]) {
-                case '0':
-                case '1':
-                case '2':
-                case '3':
-                case '4':
-                case '5':
-                case '6':
-                case '7':
-                case '8':
-                case '9':
-                case '-':
-                case '+':
-                    break;
-                case '.':
-                case 'e':
-                case 'E':
-                    couldBeDouble = true;
-                    break;
-                default:
-                    charactersDetected = true;
-                    couldBeDouble = false;
-                    break;
-            }
+        try {       //TODO find a better way
+            Long.parseLong(value);
+            type = ValueType.longValue;
         }
-        if (charactersDetected) {
-            return;
-        }
-
-        try {
-            if (couldBeDouble) {
-                doubleValue = Double.parseDouble(value);
-                longValue = (long)doubleValue;
+        catch (NumberFormatException e) {
+            try {
+                Double.parseDouble(value);
                 type = ValueType.doubleValue;
-                return;
+            }
+            catch (NumberFormatException ignored) {
+
             }
         }
-        catch (Exception ignored) {}
-
-        longValue = Long.parseLong(value);
-        doubleValue = longValue;
-        type = ValueType.longValue;
     }
 
     public VDFNode.VDFIterator iterator () {
@@ -1014,10 +818,12 @@ public class VDFNode {
         VDFNode entry = child;
         VDFNode  current;
 
+        @Override
         public boolean hasNext () {
             return entry != null;
         }
 
+        @Override
         public VDFNode  next () {
             current = entry;
             if (current == null) throw new NoSuchElementException();
@@ -1025,6 +831,7 @@ public class VDFNode {
             return current;
         }
 
+        @Override
         public void remove () {
             if (current.prev == null) {
                 child = current.next;
