@@ -21,13 +21,14 @@ import java.util.Stack;
 /**
  * Holds the internal state of the VDF parser.
  * @author Brendan Heinonen
+ * modified by AreteS0ftware
  */
 public class VDFParserState {
 
     /**
      * The root node is the base of the VDF document.  All subnodes are children of the root node.
      */
-    private VDFNode rootNode;
+    private final VDFNode rootNode;
 
     /**
      * Since a VDF document can have a virtually unlimited amount of subnodes, we use a stack datastructure to represent
@@ -238,9 +239,6 @@ public class VDFParserState {
             throw new VDFParseException("The root node was not at the top of the stack at the end of parsing. " +
                     "There was a subnode mismatch (misplaced '{'?)");
         }
-
-        rootNode.child.parent = null;
-        rootNode = rootNode.child();
     }
 
 

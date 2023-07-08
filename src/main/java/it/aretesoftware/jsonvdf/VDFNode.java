@@ -70,6 +70,19 @@ public class VDFNode {
         return current;
     }
 
+    public VDFNode get (String name, int index) {
+        VDFNode current = child;
+        while (current != null && index >= 0) {
+            if (current.name.equalsIgnoreCase(name)) {
+                index--;
+            }
+            if (index >= 0) {
+                current = current.next;
+            }
+        }
+        return current;
+    }
+
     /** Returns true if a child with the specified name exists. */
     public boolean has (String name) {
         return get(name) != null;
@@ -165,7 +178,17 @@ public class VDFNode {
         return size;
     }
 
-
+    public int sizeOf(String name) {
+        VDFNode current = child;
+        int count = 0;
+        while (current != null) {
+            if (current.name.equalsIgnoreCase(name)) {
+                count++;
+            }
+            current = current.next;
+        }
+        return count;
+    }
 
     /** Returns this value as a string.
      * @return May be null if this value is null.
@@ -653,10 +676,6 @@ public class VDFNode {
         this.type = type;
     }
 
-    public boolean isArray () {
-        return type == VDFNode.ValueType.array;
-    }
-
     public boolean isObject () {
         return type == VDFNode.ValueType.object;
     }
@@ -686,17 +705,9 @@ public class VDFNode {
         return type == VDFNode.ValueType.nullValue;
     }
 
-    /** Returns true if this is not an array or object. */
+    /** Returns true if this is not an object. */
     public boolean isValue () {
-        switch (type) {
-            case stringValue:
-            case doubleValue:
-            case longValue:
-            case booleanValue:
-            case nullValue:
-                return true;
-        }
-        return false;
+        return type != ValueType.object;
     }
 
     /** Returns the name for this object value.
@@ -807,8 +818,59 @@ public class VDFNode {
         }
     }
 
+    public void set (double value) {
+        this.stringValue = String.valueOf(value);
+        type = ValueType.doubleValue;
+    }
+
+    public void set (long value) {
+        this.stringValue = String.valueOf(value);
+        type = ValueType.longValue;
+    }
+
+    public void set (boolean value) {
+        this.stringValue = String.valueOf(value);
+        type = ValueType.booleanValue;
+    }
+
     public VDFNode.VDFIterator iterator () {
         return new VDFNode.VDFIterator();
+    }
+
+    public String toVDF() {
+        return toVDF(this, new StringBuilder(), new StringBuilder(), true);
+    }
+
+    private String toVDF(VDFNode root, StringBuilder whitespace, StringBuilder builder, boolean newLineOnNode) {
+        VDFNode current = root.parent != null ? root : root.child;
+        while (current != null) {
+            builder.append(whitespace);
+            builder.append("\"").append(current.name).append("\"");
+            builder.append(" ");
+            if (current.isValue()) {
+                builder.append("\"").append(current.stringValue).append("\"");
+            }
+            else {
+                if (newLineOnNode) {
+                    builder.append("\n");
+                    builder.append(whitespace);
+                }
+                builder.append("{");
+                if (current.child != null) {
+                    builder.append("\n");
+                    whitespace.append("    ");
+                }
+                toVDF(current.child, whitespace, builder, newLineOnNode);
+                if (current.child != null) {
+                    whitespace.setLength(whitespace.length() - 4);
+                    builder.append(whitespace);
+                }
+                builder.append("}");
+            }
+            builder.append("\n");
+            current = current.next;
+        }
+        return builder.toString();
     }
 
 
@@ -848,7 +910,7 @@ public class VDFNode {
     }
 
     public enum ValueType {
-        object, array, stringValue, doubleValue, longValue, booleanValue, nullValue
+        object, stringValue, doubleValue, longValue, booleanValue, nullValue
     }
 
 }

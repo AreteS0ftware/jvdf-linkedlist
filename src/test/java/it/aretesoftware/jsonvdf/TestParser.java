@@ -3,41 +3,19 @@ package it.aretesoftware.jsonvdf;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 /**
- * @author AreteS0ftware
+ * @author Brendan Heinonen
+ * modified by AreteS0ftware
  */
 public class TestParser {
 
     private final VDFParser parser = new VDFParser();
 
+
     // Maven surefire bug can't include resources when forking is disabled
-    private static final String VDF_SAMPLE_TYPES = "\"root_node\"\n" +
-            "{\n" +
-            "    \"long\"     \"123456\"\n" +
-            "    \"double\"    \"10E2\"\n" +
-            "    \"float\"    \"123.456\"\n" +
-            "    \"boolean\"    \"true\"\n" +
-            "    \"string\"    \"Test!\"\n" +
-            "    \"char\"    \"a\"\n" +
-            "}";
-    private static final String VDF_SAMPLE_ARRAYS = "\"root_node\"\n" +
-            "{\n" +
-            "    \"vdfValues\"     \"0.1\"\n" +
-            "    \"vdfValues\"    \"true\"\n" +
-            "    \"vdfValues\"    \"Test!\"\n" +
-            "    \"vdfValues\"    \"1\"\n" +
-            "    \"doubleValues\"    \"10E2\"\n" +
-            "    \"doubleValues\"    \"0.1\"\n" +
-            "    \"doubleValues\"    \"-10\"\n" +
-            "    \"longValues\"    \"1\"\n" +
-            "    \"longValues\"    \"+10\"\n" +
-            "    \"longValues\"    \"-100\"\n" +
-            "    \"charValues\"    \"a\"\n" +
-            "    \"charValues\"    \"b\"\n" +
-            "    \"charValues\"    \"c\"\n" +
-            "}";
     private static final String VDF_SAMPLE = "\"root_node\"\n" +
             "{\n" +
             "    \"first_sub_node\"\n" +
@@ -53,10 +31,6 @@ public class TestParser {
             "        }\n" +
             "        \"third\"     \"value3\"\n" +
             "    }\n" +
-            "}" +
-            "\"sneed\" \n" +
-            "{\n" +
-            "   \"feed\"    \"seed\"" +
             "}";
     private static final String VDF_SAMPLE_MULTIMAP = "\"root_node\"\n" +
             "{\n" +
@@ -72,100 +46,126 @@ public class TestParser {
             "    }\n" +
             "}";
 
-    @Test
-    public void testSampleTypes() {
-        VDFNode node = parser.parse(VDF_SAMPLE_TYPES);
+    private static final String VDF_SIMPLE_TEST = "key value";
+    private static final String VDF_SIMPLE_TEST_RESULT = "value";
 
-        Assert.assertEquals(123456, node.getLong("long"));
-        Assert.assertEquals(123456, node.getInt("long"));
-        Assert.assertEquals(10E2, node.getDouble("double"), 0f);
-        Assert.assertEquals(1000, node.getFloat("double"), 0f);
-        Assert.assertEquals(123.456d, node.getDouble("float"), 0f);
-        Assert.assertEquals(123.456f, node.getFloat("float"), 0f);
-        Assert.assertTrue(node.getBoolean("boolean"));
-        Assert.assertEquals("true", node.getString("boolean"));
-        Assert.assertEquals("Test!", node.getString("string"));
-        Assert.assertEquals('a', node.getChar("char"));
-        Assert.assertEquals("a", node.getString("char"));
+
+    @Test
+    public void testSimple() {
+        Assert.assertEquals(VDF_SIMPLE_TEST_RESULT, parser.parse(VDF_SIMPLE_TEST).getString("key"));
+    }
+
+    private static final String VDF_QUOTES_TEST = "\"key with space\" \"value with space\"";
+    private static final String VDF_QUOTES_TEST_RESULT = "value with space";
+
+    @Test
+    public void testQuotes() {
+        Assert.assertEquals(VDF_QUOTES_TEST_RESULT, parser.parse(VDF_QUOTES_TEST).getString("key with space"));
+    }
+
+    private static final String VDF_ESCAPE_TEST = "\"key with \\\"\" \"value with \\\" \" \"newline\" \"val\\n\\nue\"";
+    private static final String VDF_ESCAPE_TEST_RESULT = "value with \" ";
+
+    @Test
+    public void testEscape() {
+        VDFNode node = parser.parse(VDF_ESCAPE_TEST);
+        Assert.assertEquals(VDF_ESCAPE_TEST_RESULT, node.getString("key with \""));
+        Assert.assertEquals("val\n\nue", node.getString("newline"));
+    }
+
+    private static final String VDF_NULLKV_TEST = "\"key\" \"\" \"spacer\" \"spacer\" \"\" \"value\"";
+
+    @Test
+    public void testNullKeyValue() {
+        VDFNode node = parser.parse(VDF_NULLKV_TEST);
+        Assert.assertEquals("", node.getString("key"));
+        Assert.assertEquals("value", node.getString(""));
+    }
+
+    private static final String VDF_SUBSEQUENTKV_TEST = "\"key\"\"value\"";
+
+    @Test
+    public void testSubsequentKeyValue() {
+        VDFNode node = parser.parse(VDF_SUBSEQUENTKV_TEST);
+        Assert.assertEquals("value", node.getString("key"));
+    }
+
+
+    private static final String VDF_UNDERFLOW_TEST = "root_node { child_node { key value }";
+
+    @Test(expected = VDFParseException.class)
+    public void testUnderflow() {
+        parser.parse(VDF_UNDERFLOW_TEST);
+    }
+
+    private static final String VDF_OVERFLOW_TEST = "root_node { child_node { key value } } }";
+
+    @Test(expected = VDFParseException.class)
+    public void testOverflow() {
+        parser.parse(VDF_OVERFLOW_TEST);
+    }
+
+    private static final String VDF_CHILD_TEST = "root { child { key value } }";
+    private static final String VDF_CHILD_TEST_RESULT = "value";
+
+    @Test
+    public void testChild() {
+        Assert.assertEquals(VDF_CHILD_TEST_RESULT, parser.parse(VDF_CHILD_TEST)
+                .get("root")
+                .get("child")
+                .getString("key"));
     }
 
     @Test
-    public void testSampleArrays() {
-        VDFNode node = parser.parse(VDF_SAMPLE_ARRAYS);
+    public void testSample() throws URISyntaxException, IOException {
+        VDFNode root = parser.parse(VDF_SAMPLE);
 
-        VDFNode[] vdfValues = node.asArray("vdfValues");
-        Assert.assertEquals(4, vdfValues.length);
-        Assert.assertEquals(0.1f, vdfValues[0].asFloat(), 0f);
-        Assert.assertTrue(vdfValues[1].asBoolean());
-        Assert.assertEquals("Test!", vdfValues[2].asString());
-        Assert.assertEquals(1, vdfValues[3].asLong());
-
-        String[] stringValues = node.asStringArray("vdfValues");
-        Assert.assertEquals(4, stringValues.length);
-        Assert.assertEquals("0.1", stringValues[0]);
-        Assert.assertEquals("true", stringValues[1]);
-        Assert.assertEquals("Test!", stringValues[2]);
-        Assert.assertEquals("1", stringValues[3]);
-
-        Double[] doubleValues = node.asDoubleArray("doubleValues");
-        Assert.assertEquals(3, doubleValues.length);
-        Assert.assertEquals(1000d, doubleValues[0], 0);
-        Assert.assertEquals(0.1d, doubleValues[1], 0);
-        Assert.assertEquals(-10d, doubleValues[2], 0);
-
-        Float[] floatValues = node.asFloatArray("doubleValues");
-        Assert.assertEquals(3, floatValues.length);
-        Assert.assertEquals(1000f, floatValues[0], 0);
-        Assert.assertEquals(0.1f, floatValues[1], 0.001f);
-        Assert.assertEquals(-10f, floatValues[2], 0);
-
-        Long[] longValues = node.asLongArray("longValues");
-        Assert.assertEquals(3, longValues.length);
-        Assert.assertEquals(1L, longValues[0], 0);
-        Assert.assertEquals(+10L, longValues[1], 0);
-        Assert.assertEquals(-100L, longValues[2], 0);
-
-        Integer[] intValues = node.asIntArray("longValues");
-        Assert.assertEquals(3, intValues.length);
-        Assert.assertEquals(1L, intValues[0], 0);
-        Assert.assertEquals(+10L, intValues[1], 0);
-        Assert.assertEquals(-100L, intValues[2], 0);
-
-        Short[] shortValues = node.asShortArray("longValues");
-        Assert.assertEquals(3, shortValues.length);
-        Assert.assertEquals(1, shortValues[0], 0);
-        Assert.assertEquals(+10, shortValues[1], 0);
-        Assert.assertEquals(-100, shortValues[2], 0);
-
-        Byte[] byteValues = node.asByteArray("longValues");
-        Assert.assertEquals(3, byteValues.length);
-        Assert.assertEquals(1, byteValues[0], 0);
-        Assert.assertEquals(+10, byteValues[1], 0);
-        Assert.assertEquals(-100, byteValues[2], 0);
-
-        Character[] charValues = node.asCharArray("charValues");
-        Assert.assertEquals(3, charValues.length);
-        Assert.assertEquals('a', charValues[0], 0);
-        Assert.assertEquals('b', charValues[1], 0);
-        Assert.assertEquals('c', charValues[2], 0);
-
-        charValues = node.asCharArray("longValues");
-        Assert.assertEquals(3, charValues.length);
-        Assert.assertEquals(1, charValues[0], 0);
-        Assert.assertEquals(10, charValues[1], 0);
-        Assert.assertEquals(65436, charValues[2], 0);
+        Assert.assertEquals(VDFNode.class, root.get("root_node").getClass());
+        Assert.assertEquals("value1", root
+                .get("root_node")
+                .get("first_sub_node")
+                .getString("first"));
+        Assert.assertEquals("value2", root
+                .get("root_node")
+                .get("first_sub_node")
+                .getString("second"));
+        Assert.assertEquals("value3", root
+                .get("root_node")
+                .get("second_sub_node")
+                .getString("third"));
+        Assert.assertEquals("value4", root
+                .get("root_node")
+                .get("second_sub_node")
+                .get("third_sub_node")
+                .getString("fourth"));
     }
 
     @Test
-    public void testSample() {
-        VDFNode node = parser.parse(VDF_SAMPLE);
-        System.out.println(node);
+    public void testDefaultValue() {
+        VDFNode root = parser.parse(VDF_SAMPLE);
+        Assert.assertEquals("not_existing", root
+                .getString("this_key_does_not_exist", "not_existing"));
+        Assert.assertEquals(1, root
+                .getInt("this_key_does_not_exist", 1));
+        Assert.assertEquals(0.123f, root
+                .getFloat("this_key_does_not_exist", 0.123f), 0f);
+        Assert.assertEquals(Long.MAX_VALUE, root
+                .getLong("this_key_does_not_exist", Long.MAX_VALUE), 0f);
     }
 
     @Test
-    public void testSampleMultimap() {
-        VDFNode node = parser.parse(VDF_SAMPLE_MULTIMAP);
-        System.out.println(Arrays.toString(node.asArray("sub_node")));
+    public void testMultimap() throws URISyntaxException, IOException {
+        VDFNode root = parser.parse(VDF_SAMPLE_MULTIMAP);
+
+        Assert.assertEquals(2, root.get("root_node").sizeOf("sub_node"));
+        Assert.assertEquals("value1", root
+                .get("root_node")
+                .get("sub_node", 0)
+                .getString("key"));
+        Assert.assertEquals("value4", root
+                .get("root_node")
+                .get("sub_node", 1)
+                .get("key", 1).asString());
     }
 
 }
