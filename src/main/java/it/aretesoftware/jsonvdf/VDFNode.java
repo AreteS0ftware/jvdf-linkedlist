@@ -70,10 +70,14 @@ public class VDFNode {
         return current;
     }
 
+    /**
+     * Returns the child with the specified name & index.
+     * @return May be null.
+     */
     public VDFNode get (String name, int index) {
         VDFNode current = child;
         while (current != null && index >= 0) {
-            if (current.name.equalsIgnoreCase(name)) {
+            if (name.equalsIgnoreCase(current.name)) {
                 index--;
             }
             if (index >= 0) {
@@ -182,7 +186,7 @@ public class VDFNode {
         VDFNode current = child;
         int count = 0;
         while (current != null) {
-            if (current.name.equalsIgnoreCase(name)) {
+            if (name.equalsIgnoreCase(current.name)) {
                 count++;
             }
             current = current.next;
@@ -466,6 +470,133 @@ public class VDFNode {
     public VDFNode getChild (String name) {
         VDFNode child = get(name);
         return child == null ? null : child.child;
+    }
+
+    /** Finds the child with the specified name & index and returns it as a string. Returns defaultValue if not found.
+     * @param defaultValue May be null. */
+    public String getStringOfIndex (String name, int index, String defaultValue) {
+        VDFNode child = get(name, index);
+        return (child == null || !child.isValue() || child.isNull()) ? defaultValue : child.asString();
+    }
+
+    /** Finds the child with the specified name & index and returns it as a float. Returns defaultValue if not found. */
+    public float getFloatOfIndex (String name, int index, float defaultValue) {
+        VDFNode child = get(name, index);
+        return (child == null || !child.isValue() || child.isNull()) ? defaultValue : child.asFloat();
+    }
+
+    /** Finds the child with the specified name & index and returns it as a double. Returns defaultValue if not found. */
+    public double getDoubleOfIndex (String name, int index, double defaultValue) {
+        VDFNode child = get(name, index);
+        return (child == null || !child.isValue() || child.isNull()) ? defaultValue : child.asDouble();
+    }
+
+    /** Finds the child with the specified name & index and returns it as a long. Returns defaultValue if not found. */
+    public long getLongOfIndex (String name, int index, long defaultValue) {
+        VDFNode child = get(name, index);
+        return (child == null || !child.isValue() || child.isNull()) ? defaultValue : child.asLong();
+    }
+
+    /** Finds the child with the specified name & index and returns it as an int. Returns defaultValue if not found. */
+    public int getIntOfIndex (String name, int index, int defaultValue) {
+        VDFNode child = get(name, index);
+        return (child == null || !child.isValue() || child.isNull()) ? defaultValue : child.asInt();
+    }
+
+    /** Finds the child with the specified name & index and returns it as a boolean. Returns defaultValue if not found. */
+    public boolean getBooleanOfIndex (String name, int index, boolean defaultValue) {
+        VDFNode child = get(name, index);
+        return (child == null || !child.isValue() || child.isNull()) ? defaultValue : child.asBoolean();
+    }
+
+    /** Finds the child with the specified name & index and returns it as a byte. Returns defaultValue if not found. */
+    public byte getByteOfIndex (String name, int index, byte defaultValue) {
+        VDFNode child = get(name, index);
+        return (child == null || !child.isValue() || child.isNull()) ? defaultValue : child.asByte();
+    }
+
+    /** Finds the child with the specified name & index and returns it as a short. Returns defaultValue if not found. */
+    public short getShortOfIndex (String name, int index, short defaultValue) {
+        VDFNode child = get(name, index);
+        return (child == null || !child.isValue() || child.isNull()) ? defaultValue : child.asShort();
+    }
+
+    /** Finds the child with the specified name & index and returns it as a char. Returns defaultValue if not found. */
+    public char getCharOfIndex (String name, int index, char defaultValue) {
+        VDFNode child = get(name, index);
+        return (child == null || !child.isValue() || child.isNull()) ? defaultValue : child.asChar();
+    }
+
+    /** Finds the child with the specified name & index and returns it as a string.
+     * @throws IllegalArgumentException if the child was not found. */
+    public String getStringOfIndex (String name, int index) {
+        VDFNode child = get(name, index);
+        if (child == null) throw new IllegalArgumentException("Named value not found: " + name);
+        return child.asString();
+    }
+
+    /** Finds the child with the specified name & index and returns it as a float.
+     * @throws IllegalArgumentException if the child was not found. */
+    public float getFloatOfIndex (String name, int index) {
+        VDFNode child = get(name, index);
+        if (child == null) throw new IllegalArgumentException("Named value not found: " + name);
+        return child.asFloat();
+    }
+
+    /** Finds the child with the specified name & index and returns it as a double.
+     * @throws IllegalArgumentException if the child was not found. */
+    public double getDoubleOfIndex (String name, int index) {
+        VDFNode child = get(name, index);
+        if (child == null) throw new IllegalArgumentException("Named value not found: " + name);
+        return child.asDouble();
+    }
+
+    /** Finds the child with the specified name & index and returns it as a long.
+     * @throws IllegalArgumentException if the child was not found. */
+    public long getLongOfIndex (String name, int index) {
+        VDFNode child = get(name, index);
+        if (child == null) throw new IllegalArgumentException("Named value not found: " + name);
+        return child.asLong();
+    }
+
+    /** Finds the child with the specified name & index and returns it as an int.
+     * @throws IllegalArgumentException if the child was not found. */
+    public int getIntOfIndex (String name, int index) {
+        VDFNode child = get(name, index);
+        if (child == null) throw new IllegalArgumentException("Named value not found: " + name);
+        return child.asInt();
+    }
+
+    /** Finds the child with the specified name & index and returns it as a boolean.
+     * @throws IllegalArgumentException if the child was not found. */
+    public boolean getBooleanOfIndex (String name, int index) {
+        VDFNode child = get(name, index);
+        if (child == null) throw new IllegalArgumentException("Named value not found: " + name);
+        return child.asBoolean();
+    }
+
+    /** Finds the child with the specified name & index and returns it as a byte.
+     * @throws IllegalArgumentException if the child was not found. */
+    public byte getByteOfIndex (String name, int index) {
+        VDFNode child = get(name, index);
+        if (child == null) throw new IllegalArgumentException("Named value not found: " + name);
+        return child.asByte();
+    }
+
+    /** Finds the child with the specified name & index and returns it as a short.
+     * @throws IllegalArgumentException if the child was not found. */
+    public short getShortOfIndex (String name, int index) {
+        VDFNode child = get(name, index);
+        if (child == null) throw new IllegalArgumentException("Named value not found: " + name);
+        return child.asShort();
+    }
+
+    /** Finds the child with the specified name & index and returns it as a char.
+     * @throws IllegalArgumentException if the child was not found. */
+    public char getCharOfIndex (String name, int index) {
+        VDFNode child = get(name, index);
+        if (child == null) throw new IllegalArgumentException("Named value not found: " + name);
+        return child.asChar();
     }
 
     /** Finds the child with the specified name and returns it as a string. Returns defaultValue if not found.
@@ -851,17 +982,16 @@ public class VDFNode {
                 builder.append("\"").append(current.stringValue).append("\"");
             }
             else {
+                VDFNode child = current.child;
                 if (newLineOnNode) {
                     builder.append("\n");
                     builder.append(whitespace);
                 }
                 builder.append("{");
-                if (current.child != null) {
+                if (child != null) {
                     builder.append("\n");
                     whitespace.append("    ");
-                }
-                toVDF(current.child, whitespace, builder, newLineOnNode);
-                if (current.child != null) {
+                    toVDF(current.child, whitespace, builder, newLineOnNode);
                     whitespace.setLength(whitespace.length() - 4);
                     builder.append(whitespace);
                 }

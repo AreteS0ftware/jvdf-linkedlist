@@ -1,6 +1,7 @@
 "root_node"
 {
     "long"     "123456"
+    "int"      "100"
     "double"   "10E2"
     "float"    "123.456"
     "boolean"  "true"

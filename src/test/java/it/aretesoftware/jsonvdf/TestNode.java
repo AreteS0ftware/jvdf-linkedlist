@@ -14,6 +14,7 @@ public class TestNode {
     private static final String VDF_SAMPLE_TYPES = "\"root_node\"\n" +
             "{\n" +
             "    \"long\"     \"123456\"\n" +
+            "    \"int\"      \"100\"\n" +
             "    \"double\"    \"10E2\"\n" +
             "    \"float\"    \"123.456\"\n" +
             "    \"boolean\"    \"true\"\n" +
@@ -73,6 +74,8 @@ public class TestNode {
         VDFNode node = parser.parse(VDF_SAMPLE_TYPES).get("root_node");
         Assert.assertEquals(123456, node.getLong("long"));
         Assert.assertEquals(123456, node.getInt("long"));
+        Assert.assertEquals(100, node.getInt("int"));
+        Assert.assertEquals(100, node.getLong("int"));
         Assert.assertEquals(10E2, node.getDouble("double"), 0f);
         Assert.assertEquals(1000, node.getFloat("double"), 0f);
         Assert.assertEquals(123.456d, node.getDouble("float"), 0f);
@@ -82,6 +85,14 @@ public class TestNode {
         Assert.assertEquals("Test!", node.getString("string"));
         Assert.assertEquals('a', node.getChar("char"));
         Assert.assertEquals("a", node.getString("char"));
+        // defaultValue
+        Assert.assertEquals(10, node.getLong("key", 10), 0);
+        Assert.assertEquals(10, node.getInt("key", 10), 0);
+        Assert.assertEquals(10d, node.getDouble("key", 10d), 0);
+        Assert.assertEquals(10f, node.getFloat("key", 10f), 0);
+        Assert.assertFalse(node.getBoolean("key", false));
+        Assert.assertEquals("Test?", node.getString("key", "Test?"));
+        Assert.assertEquals('b', node.getChar("key", 'b'));
     }
 
     @Test
@@ -157,6 +168,11 @@ public class TestNode {
         String[] booleanToStringValues = root.asStringArray("booleanValues");
         Assert.assertEquals("true", booleanToStringValues[0]);
         Assert.assertEquals("false", booleanToStringValues[1]);
+
+        // defaultValue
+        //Assert.assertTrue(root.get("vdfValues", 2).asBoolean());
+        //Assert.assertEquals("Test!", root.getStringOfIndex("vdfValues", 2));
+        //Assert.assertEquals(1, root.getDouble("longValues"), 0);
     }
 
     @Test
