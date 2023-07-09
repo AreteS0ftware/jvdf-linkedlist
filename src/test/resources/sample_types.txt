@@ -1,0 +1,9 @@
+"root_node"
+{
+    "long"     "123456"
+    "double"   "10E2"
+    "float"    "123.456"
+    "boolean"  "true"
+    "string"   "Test!"
+    "char"     "a"
+}

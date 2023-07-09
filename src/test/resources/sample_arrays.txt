@@ -1,0 +1,17 @@
+"root_node" {
+    "vdfValues"       "0.1"
+    "vdfValues"       "true"
+    "vdfValues"       "Test!"
+    "vdfValues"       "1"
+    "doubleValues"    "10E2"
+    "doubleValues"    "0.1"
+    "doubleValues"    "-10"
+    "longValues"      "1"
+    "longValues"      "+10"
+    "longValues"      "-100"
+    "charValues"      "a"
+    "charValues"      "b"
+    "charValues"      "c"
+    "booleanValues"   "true"
+    "booleanValues"   "false"
+}
