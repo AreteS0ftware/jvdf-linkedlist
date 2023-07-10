@@ -1,10 +1,10 @@
 "root_node"
 {
-    "long"     "123456"
-    "int"      "100"
-    "double"   "10E2"
-    "float"    "123.456"
-    "boolean"  "true"
-    "string"   "Test!"
-    "char"     "a"
+    "long"     "123456"     // 0
+    "int"      "100"        // 1
+    "double"   "10E2"       // 2
+    "float"    "123.456"    // 3
+    "boolean"  "true"       // 4
+    "string"   "Test!"      // 5
+    "char"     "a"          // 6
 }
