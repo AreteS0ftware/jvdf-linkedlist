@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.platinumdigitalgroup</groupId>
-    <artifactId>JVDF</artifactId>
+    <groupId>it.aretesoftware</groupId>
+    <artifactId>json-vdf</artifactId>
     <version>1.7</version>
 
     <dependencies>

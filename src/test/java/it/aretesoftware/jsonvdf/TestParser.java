@@ -111,6 +111,7 @@ public class TestParser {
                 .getString("fourth"));
 
         // first_sub_node
+        root = root.get("root_node");
         VDFNode subNode = root.get("first_sub_node");
         VDFNode node = subNode.get("first");
         Assert.assertEquals("first", node.name());
@@ -144,7 +145,7 @@ public class TestParser {
                 .get("key", 1).asString());
 
         // sub_node
-        VDFNode[] nodes = root.asArray("sub_node");
+        VDFNode[] nodes = root.get("root_node").asArray("sub_node");
         Assert.assertEquals(2, nodes.length);
         // first
         VDFNode subNode = nodes[0];
