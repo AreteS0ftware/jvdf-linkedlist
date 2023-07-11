@@ -14,13 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package net.platinumdigitalgroup.jvdf;
+package it.aretesoftware.jsonvdf;
 
 import java.util.Stack;
 
 /**
  * Holds the internal state of the VDF parser.
  * @author Brendan Heinonen
+ * modified by AreteS0ftware
  */
 public class VDFParserState {
 
@@ -82,7 +83,7 @@ public class VDFParserState {
      * Initializes the parser state.
      */
     public VDFParserState() {
-        this(new VDFNode());
+        this(new VDFNode(VDFNode.ValueType.object));
     }
 
 
@@ -149,8 +150,9 @@ public class VDFParserState {
                 keyName = currentString.toString();
                 //System.out.println(keyName);
             } else {
-                // Store the value into the current node
-                currentValue(keyName, currentString.toString());
+                // add a child
+                VDFNode node = new VDFNode(currentString.toString());
+                current().addChild(keyName, node);
             }
 
             resetString();
@@ -196,10 +198,10 @@ public class VDFParserState {
             character('{');
         } else {
             // Create new subnode
-            VDFNode node = new VDFNode();
+            VDFNode node = new VDFNode(VDFNode.ValueType.object);
 
             // Set the current node's value
-            currentValue(keyName, node);
+            current().addChild(keyName, node);
 
             // Push node onto child node stack
             childStack.push(node);
@@ -239,14 +241,6 @@ public class VDFParserState {
         }
     }
 
-    /**
-     * Pushes a key/value pair to the current node.
-     * @param key the key
-     * @param val the value
-     */
-    private void currentValue(String key, Object val) {
-        current().put(key, val);
-    }
 
     /**
      * Clears the string buffer.

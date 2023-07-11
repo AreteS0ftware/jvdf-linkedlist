@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package net.platinumdigitalgroup.jvdf;
+package it.aretesoftware.jsonvdf;
 
 import java.util.stream.IntStream;
 
@@ -176,8 +176,8 @@ public class VDFPreprocessor {
      * Determines whether or not a character sequence is a VDF comment.  VDF comments are C-style comments, except that
      * the comment will always take up the entire rest of the line. For that reason, block termination does not need to
      * be checked.
-     * @param f the first character to test
-     * @param s the second character to test, which must be immediately after f
+     * @param arr the first character to test
+     * @param index the second character to test, which must be immediately after f
      * @return if the two characters represent a VDF, C-style comment
      */
     private boolean isComment(char[] arr, int index) {

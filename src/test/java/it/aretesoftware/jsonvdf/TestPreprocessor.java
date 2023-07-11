@@ -1,5 +1,4 @@
-package net.platinumdigitalgroup.jvdf;
-
+package it.aretesoftware.jsonvdf;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -9,7 +8,7 @@ import org.junit.Test;
  */
 public class TestPreprocessor {
 
-    private VDFPreprocessor preprocessor = new VDFPreprocessor();
+    private final VDFPreprocessor preprocessor = new VDFPreprocessor();
 
     private static final String VDF_WHITESPACE_TEST = "      \"Key\"                    \"Value\"       \n";
     private static final String VDF_WHITESPACE_TEST_RESULT = "\"Key\" \"Value\"";
