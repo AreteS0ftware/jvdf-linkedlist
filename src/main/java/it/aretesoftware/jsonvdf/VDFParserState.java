@@ -83,7 +83,7 @@ public class VDFParserState {
      * Initializes the parser state.
      */
     public VDFParserState() {
-        this(new VDFNode(VDFNode.ValueType.object));
+        this(new VDFNode());
     }
 
 
@@ -198,7 +198,7 @@ public class VDFParserState {
             character('{');
         } else {
             // Create new subnode
-            VDFNode node = new VDFNode(VDFNode.ValueType.object);
+            VDFNode node = new VDFNode();
 
             // Set the current node's value
             current().addChild(keyName, node);
