@@ -879,7 +879,7 @@ public class VDFNode {
     public String toString() {
         if (!hasChild()) {
             StringBuilder builder = new StringBuilder();
-            builder.append("\"").append(name).append("\n");
+            builder.append("\"").append(name).append("\"");
             builder.append(" ");
             builder.append("\"").append(value).append("\"");
             return builder.toString();
@@ -902,7 +902,7 @@ public class VDFNode {
             builder.append(whitespace);
             builder.append("\"").append(current.name).append("\"");
             builder.append(" ");
-            if (!current.hasChild()) {
+            if (!current.hasChild() && current.value != null) {
                 builder.append("\"").append(current.value).append("\"");
             }
             else {
@@ -915,6 +915,10 @@ public class VDFNode {
                     whitespace.append("    ");
                     toVDF(current.child, whitespace, builder);
                     whitespace.setLength(whitespace.length() - 4);
+                    builder.append(whitespace);
+                }
+                else {
+                    builder.append("\n");
                     builder.append(whitespace);
                 }
                 builder.append("}");

@@ -6,7 +6,7 @@ import org.junit.Test;
 /**
  * @author Brendan Heinonen
  */
-public class TestPreprocessor {
+public class TestPreprocessor extends BaseTest {
 
     private final VDFPreprocessor preprocessor = new VDFPreprocessor();
 

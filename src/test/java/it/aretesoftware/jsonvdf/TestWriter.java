@@ -3,10 +3,7 @@ package it.aretesoftware.jsonvdf;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-
-public class TestWriter {
+public class TestWriter extends BaseTest {
 
     private final VDFWriter writer = new VDFWriter();
     private final VDFPreprocessor preprocessor = new VDFPreprocessor();
@@ -34,23 +31,4 @@ public class TestWriter {
         Assert.assertEquals(first, second);
     }
 
-    private String getFileContents(String filePath) {
-        try {
-            FileReader in = new FileReader(filePath);
-            BufferedReader br = new BufferedReader(in);
-
-            String line;
-            StringBuilder builder = new StringBuilder();
-            while ((line = br.readLine()) != null) {
-                builder.append(line);
-                builder.append("\n");
-            }
-            in.close();
-
-            return builder.toString();
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

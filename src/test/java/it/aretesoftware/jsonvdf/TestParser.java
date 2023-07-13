@@ -10,7 +10,7 @@ import java.io.FileReader;
  * @author Brendan Heinonen
  * modified by AreteS0ftware
  */
-public class TestParser {
+public class TestParser extends BaseTest {
 
     private final VDFParser parser = new VDFParser();
     private final String sample = getFileContents("resources/sample.txt");
@@ -293,28 +293,6 @@ public class TestParser {
         Assert.assertEquals(10, node.getByteOfIndex("", 1, (byte) 10), 0);
         Assert.assertEquals(10, node.getShortOfIndex("", 1, (short) 10), 0);
         Assert.assertEquals('a', node.getCharOfIndex("", 1, 'a'));
-    }
-
-
-
-    private String getFileContents(String filePath) {
-        try {
-            FileReader in = new FileReader(filePath);
-            BufferedReader br = new BufferedReader(in);
-
-            String line;
-            StringBuilder builder = new StringBuilder();
-            while ((line = br.readLine()) != null) {
-                builder.append(line);
-                builder.append("\n");
-            }
-            in.close();
-
-            return builder.toString();
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }
