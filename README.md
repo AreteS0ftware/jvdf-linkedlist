@@ -7,7 +7,7 @@ Forked from <a href="https://github.com/PlatinumDigitalGroup/JVDF">PlatinumDigit
 ## Features
 
 * Zero dependencies.
-* Decently fast. The 6.3MB, 227k line CS:GO item schema was parsed on my machine in about 150ms when HotSpot was warmed up.
+* Quite fast. The 6.3MB, 227k line CS:GO item schema was parsed on my machine in about 100ms when HotSpot was warmed up.
 * Multi-threaded preprocessor and binder.
 * Memory efficient.  The resultant tree structures are often a tenth (1/10) the size of the input text.
 * Standalone preprocessor can convert human-readable VDF documents into much smaller, valid VDF documents with whitespace and comments stripped.
