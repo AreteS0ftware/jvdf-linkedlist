@@ -2,7 +2,7 @@
 
 A parser for Valve Software's KeyValues ("VDF") format, commonly used by Source engine games, written entirely in Java. 
 
-Forked from <a href="https://github.com/PlatinumDigitalGroup/JVDF">PlatinumDigitalGroup's JVDF</a>, the main difference is that VDF nodes work in a very similar fashion to <a href="https://github.com/libgdx/libgdx">libGDX's</a> <a href="https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/utils/JsonValue.java">JSON</a> implementation. <b>Note that this library has no libGDX dependency!</b>
+Forked from <a href="https://github.com/PlatinumDigitalGroup/JVDF">PlatinumDigitalGroup's JVDF</a>, the main difference is that VDF nodes' behavior was altered to work as a linked list, just like <a href="https://github.com/libgdx/libgdx">libGDX's</a> <a href="https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/utils/JsonValue.java">JSON</a> implementation.
 
 ## Features
 
