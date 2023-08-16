@@ -1,4 +1,7 @@
 # jvdf-linkedlist
+[![Release](https://jitpack.io/v/AreteS0ftware/gdx-quadtree.svg)](https://jitpack.io/v/AreteS0ftware/jvdf-linkedlist)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Versioning](https://img.shields.io/badge/semver-2.0.0-blue)](https://semver.org/)
 
 A parser for Valve Software's KeyValues ("VDF") format, commonly used by Source engine games, written entirely in Java. 
 
@@ -46,6 +49,28 @@ node.get("root_node")
     .get("child_node")
     .getString("child2")            => child value 2
 ```
+
+## Install
+jvdf-linkedlist is available via JitPack. Make sure you have JitPack declared as a repository in your root <code>build.gradle</code> file:
+
+```
+allprojects {
+    repositories {
+        // ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+Then add gdx-quadtree as dependency in your core project:
+```
+project(":core") {
+    dependencies {
+    	// ...
+        implementation 'com.github.AreteS0ftware:jvdf-linkedlist:0.1.0'
+    }
+}
+```
+
 
 ## License
 
