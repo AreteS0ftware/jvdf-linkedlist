@@ -816,12 +816,6 @@ public class VDFNode {
     }
 
     /**
-     * @return whether this node is a parent. */
-    public boolean isParent() {
-        return child != null;
-    }
-
-    /**
      * @return whether this node has a parent. */
     public boolean hasParent () {
         return parent != null;
@@ -884,7 +878,7 @@ public class VDFNode {
 
     @Override
     public String toString() {
-        if (!isParent()) {
+        if (isEmpty()) {
             StringBuilder builder = new StringBuilder();
             builder.append("\"").append(name).append("\"");
             builder.append(" ");
@@ -909,7 +903,7 @@ public class VDFNode {
             builder.append(whitespace);
             builder.append("\"").append(current.name).append("\"");
             builder.append(" ");
-            if (!current.isParent() && current.value != null) {
+            if (current.isEmpty() && !current.isNull()) {
                 builder.append("\"").append(current.value).append("\"");
             }
             else {
