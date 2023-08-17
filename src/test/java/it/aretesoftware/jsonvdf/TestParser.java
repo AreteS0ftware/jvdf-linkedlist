@@ -3,6 +3,8 @@ package it.aretesoftware.jsonvdf;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.List;
+
 /**
  * @author Brendan Heinonen
  * modified by AreteS0ftware
@@ -142,10 +144,10 @@ public class TestParser extends BaseTest {
                 .get("key", 1).asString());
 
         // sub_node
-        VDFNode[] nodes = root.get("root_node").asArray("sub_node");
-        Assert.assertEquals(2, nodes.length);
+        List<VDFNode> nodes = root.get("root_node").asArray("sub_node");
+        Assert.assertEquals(2, nodes.size());
         // first
-        VDFNode subNode = nodes[0];
+        VDFNode subNode = nodes.get(0);
         VDFNode node = subNode.get("key");
         Assert.assertEquals("key", node.name());
         Assert.assertEquals("value1", node.asString());
@@ -153,7 +155,7 @@ public class TestParser extends BaseTest {
         Assert.assertEquals("key", node.name());
         Assert.assertEquals("value2", node.asString());
         // second
-        subNode = nodes[1];
+        subNode = nodes.get(1);
         node = subNode.get(0);
         Assert.assertEquals("key", node.name());
         Assert.assertEquals("value3", node.asString());
@@ -197,75 +199,75 @@ public class TestParser extends BaseTest {
     public void testArrays() {
         VDFNode root = parser.parse(sample_arrays).get("root_node");
         // VDFNode
-        VDFNode[] vdfValues = root.asArray("vdfValues");
-        Assert.assertEquals(4, vdfValues.length);
-        Assert.assertEquals(0.1f, vdfValues[0].asFloat(), 0f);
-        Assert.assertTrue(vdfValues[1].asBoolean());
-        Assert.assertEquals("Test!", vdfValues[2].asString());
-        Assert.assertEquals(1, vdfValues[3].asLong());
+        List<VDFNode> vdfValues = root.asArray("vdfValues");
+        Assert.assertEquals(4, vdfValues.size());
+        Assert.assertEquals(0.1f, vdfValues.get(0).asFloat(), 0f);
+        Assert.assertTrue(vdfValues.get(1).asBoolean());
+        Assert.assertEquals("Test!", vdfValues.get(2).asString());
+        Assert.assertEquals(1, vdfValues.get(3).asLong());
         // String
-        String[] stringValues = root.asStringArray("vdfValues");
-        Assert.assertEquals(4, stringValues.length);
-        Assert.assertEquals("0.1", stringValues[0]);
-        Assert.assertEquals("true", stringValues[1]);
-        Assert.assertEquals("Test!", stringValues[2]);
-        Assert.assertEquals("1", stringValues[3]);
+        List<String> stringValues = root.asStringArray("vdfValues");
+        Assert.assertEquals(4, stringValues.size());
+        Assert.assertEquals("0.1", stringValues.get(0));
+        Assert.assertEquals("true", stringValues.get(1));
+        Assert.assertEquals("Test!", stringValues.get(2));
+        Assert.assertEquals("1", stringValues.get(3));
         // Double
-        Double[] doubleValues = root.asDoubleArray("doubleValues");
-        Assert.assertEquals(3, doubleValues.length);
-        Assert.assertEquals(1000d, doubleValues[0], 0);
-        Assert.assertEquals(0.1d, doubleValues[1], 0);
-        Assert.assertEquals(-10d, doubleValues[2], 0);
+        List<Double> doubleValues = root.asDoubleArray("doubleValues");
+        Assert.assertEquals(3, doubleValues.size());
+        Assert.assertEquals(1000d, doubleValues.get(0), 0);
+        Assert.assertEquals(0.1d, doubleValues.get(1), 0);
+        Assert.assertEquals(-10d, doubleValues.get(2), 0);
         // Float
-        Float[] floatValues = root.asFloatArray("doubleValues");
-        Assert.assertEquals(3, floatValues.length);
-        Assert.assertEquals(1000f, floatValues[0], 0);
-        Assert.assertEquals(0.1f, floatValues[1], 0.001f);
-        Assert.assertEquals(-10f, floatValues[2], 0);
+        List<Float> floatValues = root.asFloatArray("doubleValues");
+        Assert.assertEquals(3, floatValues.size());
+        Assert.assertEquals(1000f, floatValues.get(0), 0);
+        Assert.assertEquals(0.1f, floatValues.get(1), 0.001f);
+        Assert.assertEquals(-10f, floatValues.get(2), 0);
         // Long
-        Long[] longValues = root.asLongArray("longValues");
-        Assert.assertEquals(3, longValues.length);
-        Assert.assertEquals(1L, longValues[0], 0);
-        Assert.assertEquals(+10L, longValues[1], 0);
-        Assert.assertEquals(-100L, longValues[2], 0);
+        List<Long> longValues = root.asLongArray("longValues");
+        Assert.assertEquals(3, longValues.size());
+        Assert.assertEquals(1L, longValues.get(0), 0);
+        Assert.assertEquals(+10L, longValues.get(1), 0);
+        Assert.assertEquals(-100L, longValues.get(2), 0);
         // Int
-        Integer[] intValues = root.asIntArray("longValues");
-        Assert.assertEquals(3, intValues.length);
-        Assert.assertEquals(1L, intValues[0], 0);
-        Assert.assertEquals(+10L, intValues[1], 0);
-        Assert.assertEquals(-100L, intValues[2], 0);
+        List<Integer> intValues = root.asIntArray("longValues");
+        Assert.assertEquals(3, intValues.size());
+        Assert.assertEquals(1L, intValues.get(0), 0);
+        Assert.assertEquals(+10L, intValues.get(1), 0);
+        Assert.assertEquals(-100L, intValues.get(2), 0);
         // Short
-        Short[] shortValues = root.asShortArray("longValues");
-        Assert.assertEquals(3, shortValues.length);
-        Assert.assertEquals(1, shortValues[0], 0);
-        Assert.assertEquals(+10, shortValues[1], 0);
-        Assert.assertEquals(-100, shortValues[2], 0);
+        List<Short> shortValues = root.asShortArray("longValues");
+        Assert.assertEquals(3, shortValues.size());
+        Assert.assertEquals(1, shortValues.get(0), 0);
+        Assert.assertEquals(+10, shortValues.get(1), 0);
+        Assert.assertEquals(-100, shortValues.get(2), 0);
         // Byte
-        Byte[] byteValues = root.asByteArray("longValues");
-        Assert.assertEquals(3, byteValues.length);
-        Assert.assertEquals(1, byteValues[0], 0);
-        Assert.assertEquals(+10, byteValues[1], 0);
-        Assert.assertEquals(-100, byteValues[2], 0);
+        List<Byte> byteValues = root.asByteArray("longValues");
+        Assert.assertEquals(3, byteValues.size());
+        Assert.assertEquals(1, byteValues.get(0), 0);
+        Assert.assertEquals(+10, byteValues.get(1), 0);
+        Assert.assertEquals(-100, byteValues.get(2), 0);
         // Char
-        Character[] charValues = root.asCharArray("charValues");
-        Assert.assertEquals(3, charValues.length);
-        Assert.assertEquals('a', charValues[0], 0);
-        Assert.assertEquals('b', charValues[1], 0);
-        Assert.assertEquals('c', charValues[2], 0);
+        List<Character> charValues = root.asCharArray("charValues");
+        Assert.assertEquals(3, charValues.size());
+        Assert.assertEquals('a', charValues.get(0), 0);
+        Assert.assertEquals('b', charValues.get(1), 0);
+        Assert.assertEquals('c', charValues.get(2), 0);
         // Long -> Char
         charValues = root.asCharArray("longValues");
-        Assert.assertEquals(3, charValues.length);
-        Assert.assertEquals(1, charValues[0], 0);
-        Assert.assertEquals(10, charValues[1], 0);
-        Assert.assertEquals(65436, charValues[2], 0);
+        Assert.assertEquals(3, charValues.size());
+        Assert.assertEquals(1, charValues.get(0), 0);
+        Assert.assertEquals(10, charValues.get(1), 0);
+        Assert.assertEquals(65436, charValues.get(2), 0);
         // Boolean
-        Boolean[] booleanValues = root.asBooleanArray("booleanValues");
-        Assert.assertTrue(booleanValues[0]);
-        Assert.assertFalse(booleanValues[1]);
+        List<Boolean> booleanValues = root.asBooleanArray("booleanValues");
+        Assert.assertTrue(booleanValues.get(0));
+        Assert.assertFalse(booleanValues.get(1));
         // Boolean -> String
-        String[] booleanToStringValues = root.asStringArray("booleanValues");
-        Assert.assertEquals("true", booleanToStringValues[0]);
-        Assert.assertEquals("false", booleanToStringValues[1]);
+        List<String> booleanToStringValues = root.asStringArray("booleanValues");
+        Assert.assertEquals("true", booleanToStringValues.get(0));
+        Assert.assertEquals("false", booleanToStringValues.get(1));
     }
 
     @Test
