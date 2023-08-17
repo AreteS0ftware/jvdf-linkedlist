@@ -3,9 +3,6 @@ package it.aretesoftware.jsonvdf;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-
 /**
  * @author Brendan Heinonen
  * modified by AreteS0ftware

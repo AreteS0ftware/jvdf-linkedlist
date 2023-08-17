@@ -21,7 +21,7 @@ import java.util.Stack;
 /**
  * Holds the internal state of the VDF parser.
  * @author Brendan Heinonen
- * modified by AreteS0ftware
+ * modified by Arete
  */
 public class VDFParserState {
 

@@ -6,6 +6,7 @@ import java.io.FileReader;
 public class BaseTest {
 
     protected String getFileContents(String filePath) {
+        filePath = "src/test/" + filePath;
         try {
             FileReader in = new FileReader(filePath);
             BufferedReader br = new BufferedReader(in);

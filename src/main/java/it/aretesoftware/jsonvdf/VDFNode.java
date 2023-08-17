@@ -24,6 +24,7 @@ import java.util.NoSuchElementException;
 /**
  * An iterable tree structure that represents a set of key-value pairs in a VDF document.
  * @author Brendan Heinonen
+ * modified by Arete
  */
 public class VDFNode {
 
@@ -94,9 +95,9 @@ public class VDFNode {
     public VDFNode.VDFIterator iterator (String name) {
         VDFNode current = get(name);
         if (current == null) {
-            VDFNode.VDFIterator iter = new VDFNode.VDFIterator();
-            iter.entry = null;
-            return iter;
+            VDFNode.VDFIterator iterator = new VDFNode.VDFIterator();
+            iterator.entry = null;
+            return iterator;
         }
         return current.iterator();
     }
@@ -330,7 +331,7 @@ public class VDFNode {
         }
     }
 
-    public VDFNode[] asArray(String key) {
+    public List<VDFNode> asArray(String key) {
         List<VDFNode> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
@@ -338,12 +339,12 @@ public class VDFNode {
                 list.add(value);
             }
         }
-        return list.toArray(new VDFNode[list.size()]);
+        return list;
     }
 
     /** Returns the children of this value as a newly allocated String array.
      * @throws IllegalStateException if this is not an array. */
-    public String[] asStringArray (String key) {
+    public List<String> asStringArray (String key) {
         List<String> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
@@ -351,12 +352,12 @@ public class VDFNode {
                 list.add(value.value);
             }
         }
-        return list.toArray(new String[list.size()]);
+        return list;
     }
 
     /** Returns the children of this value as a newly allocated float array.
      * @throws IllegalStateException if this is not an array. */
-    public Float[] asFloatArray (String key) {
+    public List<Float> asFloatArray (String key) {
         List<Float> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
@@ -364,12 +365,12 @@ public class VDFNode {
                 list.add(value.asFloat());
             }
         }
-        return list.toArray(new Float[list.size()]);
+        return list;
     }
 
     /** Returns the children of this value as a newly allocated double array.
      * @throws IllegalStateException if this is not an array. */
-    public Double[] asDoubleArray (String key) {
+    public List<Double> asDoubleArray (String key) {
         List<Double> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
@@ -377,12 +378,12 @@ public class VDFNode {
                 list.add(value.asDouble());
             }
         }
-        return list.toArray(new Double[list.size()]);
+        return list;
     }
 
     /** Returns the children of this value as a newly allocated long array.
      * @throws IllegalStateException if this is not an array. */
-    public Long[] asLongArray (String key) {
+    public List<Long> asLongArray (String key) {
         List<Long> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
@@ -390,12 +391,12 @@ public class VDFNode {
                 list.add(value.asLong());
             }
         }
-        return list.toArray(new Long[list.size()]);
+        return list;
     }
 
     /** Returns the children of this value as a newly allocated int array.
      * @throws IllegalStateException if this is not an array. */
-    public Integer[] asIntArray (String key) {
+    public List<Integer> asIntArray (String key) {
         List<Integer> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
@@ -403,12 +404,12 @@ public class VDFNode {
                 list.add(value.asInt());
             }
         }
-        return list.toArray(new Integer[list.size()]);
+        return list;
     }
 
     /** Returns the children of this value as a newly allocated boolean array.
      * @throws IllegalStateException if this is not an array. */
-    public Boolean[] asBooleanArray (String key) {
+    public List<Boolean> asBooleanArray (String key) {
         List<Boolean> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
@@ -416,12 +417,12 @@ public class VDFNode {
                 list.add(value.asBoolean());
             }
         }
-        return list.toArray(new Boolean[list.size()]);
+        return list;
     }
 
     /** Returns the children of this value as a newly allocated byte array.
      * @throws IllegalStateException if this is not an array. */
-    public Byte[] asByteArray (String key) {
+    public List<Byte> asByteArray (String key) {
         List<Byte> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
@@ -429,12 +430,12 @@ public class VDFNode {
                 list.add(value.asByte());
             }
         }
-        return list.toArray(new Byte[list.size()]);
+        return list;
     }
 
     /** Returns the children of this value as a newly allocated short array.
      * @throws IllegalStateException if this is not an array. */
-    public Short[] asShortArray (String key) {
+    public List<Short> asShortArray (String key) {
         List<Short> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
@@ -442,12 +443,12 @@ public class VDFNode {
                 list.add(value.asShort());
             }
         }
-        return list.toArray(new Short[list.size()]);
+        return list;
     }
 
     /** Returns the children of this value as a newly allocated char array.
      * @throws IllegalStateException if this is not an array. */
-    public Character[] asCharArray (String key) {
+    public List<Character> asCharArray (String key) {
         List<Character> list = new ArrayList<>();
         int i = 0;
         for (VDFNode value = child; value != null; value = value.next, i++) {
@@ -455,7 +456,7 @@ public class VDFNode {
                 list.add(value.asChar());
             }
         }
-        return list.toArray(new Character[list.size()]);
+        return list;
     }
 
     /** Returns true if a child with the specified name exists and has a child. */
@@ -893,11 +894,11 @@ public class VDFNode {
      * Returns a human readable string representing the path from the root of the VDF object graph to this value.
      */
     public String toVDF() {
-        return toVDF(this, new StringBuilder(), new StringBuilder());
+        return toVDF(this, this, new StringBuilder(), new StringBuilder());
     }
 
-    private String toVDF(VDFNode root, StringBuilder whitespace, StringBuilder builder) {
-        VDFNode current = root.parent != null ? root : root.child;
+    private String toVDF(VDFNode root, VDFNode start, StringBuilder whitespace, StringBuilder builder) {
+        VDFNode current = start.parent != null ? start : start.child;
         while (current != null) {
             builder.append(whitespace);
             builder.append("\"").append(current.name).append("\"");
@@ -913,7 +914,7 @@ public class VDFNode {
                 if (child != null) {
                     builder.append("\n");
                     whitespace.append("    ");
-                    toVDF(current.child, whitespace, builder);
+                    toVDF(root, child, whitespace, builder);
                     whitespace.setLength(whitespace.length() - 4);
                     builder.append(whitespace);
                 }
@@ -924,7 +925,12 @@ public class VDFNode {
                 builder.append("}");
             }
             builder.append("\n");
-            current = current.next;
+            if (start != root) {
+                current = current.next;
+            }
+            else {
+                current = null;
+            }
         }
         return builder.toString();
     }
