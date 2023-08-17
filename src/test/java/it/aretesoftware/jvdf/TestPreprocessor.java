@@ -1,4 +1,4 @@
-package it.aretesoftware.jsonvdf;
+package it.aretesoftware.jvdf;
 
 import org.junit.Assert;
 import org.junit.Test;

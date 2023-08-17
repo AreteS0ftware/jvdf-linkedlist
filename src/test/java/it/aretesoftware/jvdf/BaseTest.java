@@ -1,4 +1,4 @@
-package it.aretesoftware.jsonvdf;
+package it.aretesoftware.jvdf;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
